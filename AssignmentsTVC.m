@@ -62,6 +62,34 @@
 
 -(void)parseUserData:(NSDictionary *)dic {
     
+//    {
+//    _id: "534e95022e7c06ee6ac06339",
+//    email: "gil.silas2@gmail.com",
+//    major: "CS",
+//    university: "IDC",
+//    year: 2,
+//    history: [ {
+//    exercise: {
+//    course: "Graphics",
+//    number: 3,
+//    due: "2014-04-16T00:00:00Z",
+//    submittedCount: 7,
+//    dismissedCount: 2
+//    },
+//    createdAt: "2014-04-15T00:00:00Z",
+//    isSubmitted: true
+//    } ],
+//    createdAt: "2014-04-16T14:34:42.350Z",
+//    token: "21uheu12heuh13h1rh9889r3"
+//    }
+    
+    NSMutableDictionary *result = [[NSMutableDictionary alloc]init];
+    NSArray * arr = [dic objectForKey:@"history"];
+    for (int i = 0; i < arr.count; i ++) {
+        NSDictionary *cureentDic  = [arr objectAtIndex:i];
+        
+    }
+    
 }
 
 #pragma mark - Table view data source
