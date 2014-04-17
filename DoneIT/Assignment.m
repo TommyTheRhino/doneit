@@ -18,7 +18,17 @@
     {
         self.course = [dic objectForKey:COURSE];
         self.numberOfExe = [dic objectForKey:NUMBER];
-        self.dueDate = [dic objectForKey:DUE_DATE];
+        
+        
+        NSString *dateString = [dic objectForKey:DUE_DATE];
+        
+        NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+        [dateFormat setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"];
+        
+        NSDate *date = [dateFormat dateFromString:dateString];
+        NSLog(@"%@",dateString);
+        
+        self.dueDate = date ;
     }
     return self;
 }

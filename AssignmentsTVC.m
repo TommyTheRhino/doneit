@@ -11,11 +11,14 @@
 #import "BEVSliderCell.h"
 #import "AFHTTPRequestOperationManager.h"
 #import "User.h"
-
+#import "constants.h"
+#import "AppUtilities.h"
 
 @interface AssignmentsTVC ()
 @property (strong,nonatomic) NSMutableArray* doIt;
-@property (strong,nonatomic) NSMutableArray* doneIt;
+@property (strong,nonatomic) NSMutableArray* allCourseName;
+@property (strong,nonatomic) NSMutableDictionary* assignmentsForCourse;
+
 @property (strong, nonatomic) IBOutlet UISegmentedControl *segmenttedControl;
 
 
@@ -31,6 +34,9 @@
     self.currentTVCState = DoIT;
     self.segmenttedControl.selectedSegmentIndex = 1;
     [self getData];
+    UIColor *darkB = [AppUtilities darkerColorForColor:[UIColor blueColor]];
+    self.tableView.editing = NO;
+    [self.segmenttedControl setTintColor:darkB];
 
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -41,16 +47,17 @@
 
 -(void)getData{
     self.doIt = [[NSMutableArray alloc]init];
-    NSDictionary *dic1  = [[NSDictionary alloc] initWithObjectsAndKeys:@"OS", @"course", @1, @"number",[NSDate date],@"due", nil];
+    NSDictionary *dic1  = [[NSDictionary alloc] initWithObjectsAndKeys:@"OS", @"course", @1, @"number",@"2014-09-27T00:00:00.000Z",@"due", nil];
     [self.doIt addObject:dic1];
     
   //  GET /exercises?token=TOKEN
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     NSString *s = [NSString stringWithFormat:@"http://doitapi.herokuapp.com/me?token=%@",[User localUser].token];
     [manager GET:s parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"JSON: %@", responseObject);
+
         [self parseUserData:responseObject];
         
-        NSLog(@"JSON: %@", responseObject);
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error: %@", error);
     }];
@@ -84,11 +91,28 @@
 //    }
     
     NSMutableDictionary *result = [[NSMutableDictionary alloc]init];
+    NSMutableArray *allCourseName = [[NSMutableArray alloc]init];
     NSArray * arr = [dic objectForKey:@"history"];
     for (int i = 0; i < arr.count; i ++) {
         NSDictionary *cureentDic  = [arr objectAtIndex:i];
+        Assignment *cureentAssignmet = [[Assignment alloc]initWithDic:[cureentDic objectForKey:@"exercise" ]];
+        if ([[cureentDic objectForKey:@"isSubmitted"]  isEqual: @1]){
+            cureentAssignmet.didSubmit = YES;
+        }
+        NSString* course = cureentAssignmet.course;
+        if ([result objectForKey:course]) {
+            NSMutableArray* mutArr = [result objectForKey:course];
+            [mutArr addObject:cureentAssignmet];
+        }else {
+            [allCourseName addObject:course];
+            NSMutableArray* mutrr = [[NSMutableArray alloc]init];
+            [mutrr addObject:cureentAssignmet];
+            [result setObject:mutrr forKey:course];
+        }
         
     }
+    self.allCourseName = allCourseName;
+    self.assignmentsForCourse = result;
     
 }
 
@@ -99,7 +123,7 @@
     if (self.currentTVCState == DoIT) {
         return 1;
     }else {
-        return 2;
+        return [self.allCourseName count];
     }
 }
 
@@ -108,7 +132,9 @@
     if (self.currentTVCState == DoIT) {
         return [self.doIt count];
     }else {
-        return 2;
+        NSString* course = [self.allCourseName objectAtIndex:section];
+        NSMutableArray* result = [self.assignmentsForCourse objectForKey:course];
+        return [result count];
     }
 }
 
@@ -118,6 +144,8 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
    static NSString *CellIdentifier = @"UpdatesCell";
+    static NSString *CellIdentifier2 = @"DoneItCell";
+
 //    BEVSliderCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
 //    cell.allowPanningLeft = YES;
 //     cell.allowPanningRight = YES;
@@ -133,31 +161,61 @@
 //    cell.bgColorDuringPan = [UIColor greenColor];
 //    cell.backgroundColor = [UIColor orangeColor];
 //    cell.frontLabel.text = [NSString stringWithFormat:@"%d",indexPath.row];
-
-   UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
+    UITableViewCell *cell = nil;
     if (self.currentTVCState == DoIT) {
-        Assignment *currentAssignment = [[Assignment alloc]initWithDic:[self.doIt objectAtIndex:indexPath.row]];
-        cell.textLabel.text = [NSString stringWithFormat:@"%@ Exercise %d",currentAssignment.course,[currentAssignment.numberOfExe intValue ]];
-        cell.textLabel.textAlignment = NSTextAlignmentCenter;
-        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        [formatter setDateFormat:@"dd/MM"];
-        NSString* dueDateInString = [formatter stringFromDate:currentAssignment.dueDate];
-        cell.detailTextLabel.text = dueDateInString;
-        cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+        cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+    }else {
+        cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier2 forIndexPath:indexPath];
+    }
+   
+    
+    cell.backgroundColor = [UIColor whiteColor];
+    Assignment *currentAssignment = nil;
+    if (self.currentTVCState == DoIT) {
+        currentAssignment = [[Assignment alloc]initWithDic:[self.doIt objectAtIndex:indexPath.row]];
+        
         
         
         
     } else {
+        NSString* course = [self.allCourseName objectAtIndex:indexPath.section];
+        NSMutableArray* assignmentForCourse = [self.assignmentsForCourse objectForKey:course];
+        currentAssignment = [assignmentForCourse objectAtIndex:indexPath.row];
+        if (currentAssignment.didSubmit) {
+            UIColor * c =[AppUtilities darkerColorForColor:[UIColor greenColor]];
+                          c = [AppUtilities darkerColorForColor:c];
+          cell.textLabel.textColor = c;
+        }else {
+            cell.textLabel.textColor = [UIColor redColor];
+        }
+        
         
     }
     
+    
+    cell.textLabel.text = [NSString stringWithFormat:@"%@ Exercise %d",currentAssignment.course,[currentAssignment.numberOfExe intValue ]];
+    cell.textLabel.textAlignment = NSTextAlignmentCenter;
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"dd/MM"];
+    NSString* dueDateInString = [formatter stringFromDate:currentAssignment.dueDate];
+    cell.detailTextLabel.text = dueDateInString;
+    cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+   
     
     
     
     
     return cell;
     
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
+    if (self.currentTVCState == DoneIT) {
+        NSString *result = [ NSString stringWithFormat:@"Assignment In %@",[self.allCourseName objectAtIndex:section]];
+        return result;
+    }
+    return nil;
 }
 
 
@@ -182,22 +240,17 @@
 
 
 
-- (void)tableView:(UITableView *)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    cell.backgroundColor = [UIColor redColor];
-}
 
 -(float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 60.0f;
 }
 
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-}
+
+
+
 - (IBAction)segmentControlChange:(id)sender {
     if (self.currentTVCState == DoIT) {
-        self.currentTVCState = DoIT;
+        self.currentTVCState = DoneIT;
     }else {
         self.currentTVCState = DoIT;
     }

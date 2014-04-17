@@ -12,6 +12,8 @@
 @property (strong,nonatomic) NSString* course;
 @property (strong,nonatomic) NSNumber* numberOfExe;
 @property (strong,nonatomic) NSDate* dueDate;
+@property BOOL didSubmit;
+
 - (id)initWithDic:(NSDictionary *)dic;
 
 @end

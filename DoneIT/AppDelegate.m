@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "User.h"
+#import "Register.h"
 
 @implementation AppDelegate
 
@@ -16,12 +17,17 @@
     // Override point for customization after application launch.
     User *localUser = [User localUser];
     NSLog(@"%@",localUser.token);
+
 #warning should change the nil on line above
     if (!localUser.token) {
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Mainstoryboard" bundle:nil];
-        UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"Register"];
-        self.window.rootViewController = vc;
-        [self.window makeKeyAndVisible];
+        Register* room = [[Register alloc] init];
+        [self.window.rootViewController presentViewController:room
+                                                     animated:NO
+                                                   completion:nil];
+        
+//        UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle: nil];
+//        Register *yourController = (Register *)[mainStoryboard instantiateViewControllerWithIdentifier:@"Register"];
+//        self.window.rootViewController = yourController;
     }
 
     return YES;
