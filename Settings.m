@@ -10,6 +10,7 @@
 #import "constants.h"
 #import "PickerDS.h"
 #import "AFHTTPRequestOperationManager.h"
+#import "User.h"
 @interface Settings ()
 @property (strong,nonatomic) UIButton *majorButton;
 @property (strong,nonatomic) UIButton *yearButton;
@@ -22,6 +23,9 @@
 @property (strong,nonatomic) UIPickerView *currentPicker;
 @property (strong,nonatomic)  UIToolbar *pickertoolbar;
 @property (strong,nonatomic) UIBarButtonItem *doneButton;
+@property (strong,nonatomic) UIActivityIndicatorView *spinner;
+
+
 
 
 
@@ -46,40 +50,54 @@
     [self createButtons];
     [self createNavigiyonBar];
     [self getDataFromServer];
+    [self chekIfUserDataExists];
+    [self startSpinner];
     
     // Do any additional setup after loading the view.
 }
-#pragma data handling
+#pragma mark - data handling
 #define NAME @"name"
 #define MAJORS @"majors"
 -(void)getDataFromServer {
     
     
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    [manager GET:@"http://doitapi.herokuapp.com/universities" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    NSString *toGetAddress = [NSString stringWithFormat:@"%@/universities",SERVER_ADDRESS];
+    [manager GET:toGetAddress parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSMutableArray *arr = [[NSMutableArray alloc]initWithArray:responseObject];
         self.dataArr = arr;
-
-        NSLog(@"JSON: %@", responseObject);
+        [self stopSpinner];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error: %@", error);
     }];
     
+
     
-    
-  //  NSMutableArray *arr = [[NSMutableArray alloc]initWithArray:re];
-    
-//    NSArray * subjectArr = [[NSArray alloc]initWithObjects:@"CS",@"law",@"arts", nil];
-//    NSDictionary *dict1 = [[NSDictionary alloc] initWithObjectsAndKeys:@"IDC", NAME, subjectArr, @"majors", nil];
-//    [arr addObject:dict1];
-//    
-//    NSArray * subjectArr2 = [[NSArray alloc]initWithObjects:@"one",@"two",@"3", nil];
-//    NSDictionary *dict2 = [[NSDictionary alloc] initWithObjectsAndKeys:@"TEL-AVIV", NAME, subjectArr2, @"majors", nil];
-//    
-//    [arr addObject:dict2];
-  //  self.dataArr = arr;
-    
-    
+}
+
+-(void)chekIfUserDataExists {
+    User *cureentUser = [User localUser];
+    if (cureentUser.uni) {
+        [self.uniButton setTitle:cureentUser.uni forState:UIControlStateNormal];
+        self.currentUserUni = cureentUser.uni;
+    }
+    if (cureentUser.majorSubject) {
+        [self.majorButton setTitle:cureentUser.majorSubject forState:UIControlStateNormal];
+        self.majorButton.enabled = YES;
+        self.majorButton.alpha = 1;
+        self.currentUserMajor = cureentUser.majorSubject;
+    }
+    if (cureentUser.year) {
+        NSArray *yearArr = [self getArrOfyers];
+        int lociton = [cureentUser.year intValue];
+        lociton --;
+        NSString *yearInString = [yearArr objectAtIndex:lociton];
+        [self.yearButton setTitle:yearInString forState:UIControlStateNormal];
+        self.yearButton.enabled = YES;
+        self.yearButton.alpha = 1;
+        self.doneButton.enabled = YES;
+        self.currentUserYear = cureentUser.year;
+    }
 }
 
 -(NSArray *)getUniverstyArr{
@@ -315,8 +333,8 @@
         
         NSInteger row = [self.UniPicker selectedRowInComponent:0];
         self.currentUserUni = [[self getUniverstyArr]objectAtIndex:row];
-        
         [self.uniButton setTitle:self.currentUserUni forState:UIControlStateNormal];
+        
         
     }else if (self.currentPicker == self.majorPicker) {
         NSInteger row = [self.majorPicker selectedRowInComponent:0];
@@ -329,7 +347,7 @@
 
     }else if (self.currentPicker == self.yearPicker) {
         NSInteger row = [self.yearPicker selectedRowInComponent:0];
-        self.currentUserYear = [NSString stringWithFormat:@"%d",row + 1];
+        self.currentUserYear = [NSString stringWithFormat:@"%ld",row + 1];
         NSString* yearForButton = [[self getArrOfyers]objectAtIndex:row];
         [self.yearButton setTitle:yearForButton  forState:UIControlStateNormal];
     }
@@ -377,6 +395,36 @@
     for (UIView *view in allSubView) {
         [view setUserInteractionEnabled:YES];
     }
+    
+}
+
+#pragma mark - spinner
+#define SPINNER_WIDTH 30
+#define SPINNER_HEIGHT 30
+-(void)startSpinner {
+    self.view.alpha = 0.7;
+    CGRect spinnerFrame = CGRectMake(self.view.frame.size.width/2 -(SPINNER_WIDTH / 2),
+                                     self.view.frame.size.height/2 - (SPINNER_HEIGHT /2) - self.navigationController.navigationBar.frame.size.height,
+                                     30,
+                                     30);
+    UIActivityIndicatorView * activityindicator1 = [[UIActivityIndicatorView alloc]initWithFrame:spinnerFrame];
+    [activityindicator1 setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    [activityindicator1 setColor:[UIColor purpleColor]];
+    [self.view addSubview:activityindicator1];
+    [activityindicator1 startAnimating];
+    self.spinner = activityindicator1;
+    
+    self.uniButton.enabled = NO;
+    
+    
+}
+
+-(void)stopSpinner {
+    self.view.alpha = 1;
+    [self.spinner stopAnimating];
+    [self.spinner removeFromSuperview];
+    self.uniButton.enabled = YES;
+
     
 }
 

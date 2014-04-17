@@ -14,25 +14,14 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
-    User *localUser = [User localUser];
-    NSLog(@"%@",localUser.token);
-
-#warning should change the nil on line above
-    if (!localUser.token) {
-        Register* room = [[Register alloc] init];
-        [self.window.rootViewController presentViewController:room
-                                                     animated:NO
-                                                   completion:nil];
-        
-//        UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle: nil];
-//        Register *yourController = (Register *)[mainStoryboard instantiateViewControllerWithIdentifier:@"Register"];
-//        self.window.rootViewController = yourController;
+    if (![User localUser].token) {
+        self.window.rootViewController =
+        [[UIStoryboard storyboardWithName:@"Main" bundle:nil]
+         instantiateViewControllerWithIdentifier:@"Register"];
     }
-
     return YES;
 }
-							
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -41,7 +30,7 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
+    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 }
 

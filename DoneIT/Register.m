@@ -40,7 +40,11 @@
     self.sendButton.backgroundColor = APP_LIGHT_GREEN_COLOR;
     [self.sendButton setTitleColor:APP_YELLOW_COLOR forState:UIControlStateNormal];
     self.emailTextFiled.layer.cornerRadius = 5.0f;
+    
+    
 }
+
+
 - (IBAction)sendButtonPressed:(id)sender {
     BOOL isEmailValied = [self validateEmail:self.emailTextFiled.text];
     if (isEmailValied) {
@@ -90,15 +94,17 @@
     [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     
-//    email": "gilsilas@gmail.com",
-//    "university": "IDC",
-//    "major": "CS",
-//year: 2
     NSDictionary *parameters = [[NSDictionary alloc] initWithObjectsAndKeys:self.emailTextFiled.text, @"email", controller.currentUserUni, @"university",controller.currentUserMajor,@"major",controller.currentUserYear,@"year", nil];
-    [manager POST:@"http://doitapi.herokuapp.com/register" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        User *user = [[User alloc]init];
-        user.token = [responseObject objectForKey:@"token"];
-        [user save];
+    NSString * toPosst = [NSString stringWithFormat:@"%@/register",SERVER_ADDRESS];
+    
+    [manager POST:toPosst parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        User *cureentUser = [User localUser];
+        cureentUser.token = [responseObject objectForKey:@"token"];
+        cureentUser.majorSubject = controller.currentUserMajor;
+        cureentUser.uni = controller.currentUserUni;
+        cureentUser.year = controller.currentUserYear;
+        cureentUser.email = self.emailTextFiled.text;
+        [cureentUser save];
         [controller dismissViewControllerAnimated:NO completion:nil];
         [self performSegueWithIdentifier:@"StartApp" sender:self];
 
@@ -106,10 +112,10 @@
         NSLog(@"Error: %@", error);
     }];
     
-    
 }
 
 -(void)SettingsViewControllerDidPressedOnCancelButton:(Settings *)controller{
+    [controller dismissViewControllerAnimated:NO completion:nil];
     
 }
 @end

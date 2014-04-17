@@ -7,11 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Settings.h"
 typedef enum {
     DoIT,
     DoneIT
 } TVCState;
-@interface AssignmentsTVC : UITableViewController <UITableViewDelegate>
+@interface AssignmentsTVC : UITableViewController <UITableViewDelegate,SettingsDelegate>
 @property TVCState currentTVCState;
 
 @end

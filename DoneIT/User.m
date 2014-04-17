@@ -7,12 +7,16 @@
 //
 
 #import "User.h"
+#define USER_TOKEN_KEY @"userTokenKey"
+#define USER_UNI_KEY @"userUni"
+#define USER_MAJOR_KEY @"userMajor"
+#define USER_YEAR @"userYear"
+#define USER_EMAIL @"Email"
+
+
+
 
 #define USER_KEY @"userKey"
-#define USER_NAME_KEY @"userNameKey"
-#define USER_PHONE_KEY @"userPhoneKey"
-#define USER_TOKEN_KEY @"userTokenKey"
-#define USER_BIRTHDAY_KEY @"userBirthdayKey"
 #define USER_THUMBNAIL_KEY @"userThumbnailKey"
 #define USER_GENDER_KEY @"userGenderKey"
 #define USER_HEIGHT_KEY @"userHeightKey"
@@ -28,6 +32,11 @@
         sharedInstance = [[User alloc] init];
         if (dict) {
             if (dict[USER_TOKEN_KEY]) sharedInstance.token = dict[USER_TOKEN_KEY];
+            if (dict[USER_UNI_KEY]) sharedInstance.uni = dict[USER_UNI_KEY];
+            if (dict[USER_MAJOR_KEY ]) sharedInstance.majorSubject = dict[USER_MAJOR_KEY];
+            if (dict[USER_YEAR]) sharedInstance.year = dict[USER_YEAR];
+            if (dict[USER_EMAIL]) sharedInstance.email = dict[USER_EMAIL];
+
         }
     });
     return sharedInstance;
@@ -39,9 +48,26 @@
 - (void)save {
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
     if (self.token) dict[USER_TOKEN_KEY] = self.token;
-    
+    if (self.uni) dict[USER_UNI_KEY] = self.uni;
+    if (self.majorSubject) dict[USER_MAJOR_KEY] = self.majorSubject;
+    if (self.year) dict[USER_YEAR] = self.year;
+    if (self.year) dict[USER_EMAIL] = self.email;
+
+
     [[NSUserDefaults standardUserDefaults] setObject:dict forKey:USER_KEY];
     [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
++(void)Kill{
+    User *local = [User localUser];
+    if (local) {
+        local.uni = nil;
+        local.email = nil;
+        local.year = nil;
+        local.majorSubject = nil;
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:USER_KEY];
+
+    }
 }
 
 @end

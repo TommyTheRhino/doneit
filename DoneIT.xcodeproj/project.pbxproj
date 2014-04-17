@@ -177,6 +177,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		461AFEBF1900551200ABCFE2 /* Register */ = {
+			isa = PBXGroup;
+			children = (
+				468C231518FE875000ED3695 /* Register.m */,
+				468C231418FE875000ED3695 /* Register.h */,
+			);
+			name = Register;
+			sourceTree = "<group>";
+		};
 		468C22CD18FE844700ED3695 = {
 			isa = PBXGroup;
 			children = (
@@ -211,16 +220,15 @@
 		468C22DF18FE844700ED3695 /* DoneIT */ = {
 			isa = PBXGroup;
 			children = (
+				461AFEBF1900551200ABCFE2 /* Register */,
 				468C242318FF0F5B00ED3695 /* Model */,
 				468C241B18FEDA5000ED3695 /* Assignment */,
 				468C231C18FEA5AA00ED3695 /* Utilities */,
 				468C231B18FEA59700ED3695 /* Settings */,
+				468C231718FE887500ED3695 /* constants.h */,
 				468C22E818FE844700ED3695 /* AppDelegate.h */,
 				468C22E918FE844700ED3695 /* AppDelegate.m */,
 				468C22EB18FE844700ED3695 /* Main.storyboard */,
-				468C231418FE875000ED3695 /* Register.h */,
-				468C231518FE875000ED3695 /* Register.m */,
-				468C231718FE887500ED3695 /* constants.h */,
 				468C22F118FE844700ED3695 /* Images.xcassets */,
 				468C241518FED3B300ED3695 /* icon_settings.png */,
 				468C22E018FE844700ED3695 /* Supporting Files */,

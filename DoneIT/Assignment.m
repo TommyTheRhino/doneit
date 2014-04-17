@@ -12,13 +12,15 @@
 #define COURSE @"course"
 #define NUMBER @"number"
 #define DUE_DATE @"due"
+#define ID @"_id"
 - (id)initWithDic:(NSDictionary *)dic{
     self = [super init];
     if (self)
     {
         self.course = [dic objectForKey:COURSE];
+        [self.course capitalizedString];
         self.numberOfExe = [dic objectForKey:NUMBER];
-        
+        self.assignmentID = [dic objectForKey:ID];
         
         NSString *dateString = [dic objectForKey:DUE_DATE];
         

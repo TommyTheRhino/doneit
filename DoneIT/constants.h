@@ -18,7 +18,8 @@
 
 #define KEYBOARD_HEIGHT_PORTRET 216
 #define UITABBAR_HEIGHT 49
-
+#define SERVER_ADDRESS @"http://doitapi.herokuapp.com"
+//10.10.8.115:3000
 #define DoneIT_constants_h
 
 
