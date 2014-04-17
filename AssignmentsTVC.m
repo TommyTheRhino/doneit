@@ -8,13 +8,14 @@
 
 #import "AssignmentsTVC.h"
 #import "Assignment.h"
-#import "BEVSliderCell.h"
 #import "AFHTTPRequestOperationManager.h"
 #import "User.h"
 #import "constants.h"
 #import "AppUtilities.h"
+#import "MCSwipeTableViewCell.h"
 
-@interface AssignmentsTVC ()
+
+@interface AssignmentsTVC () <MCSwipeTableViewCellDelegate>
 @property (strong,nonatomic) NSMutableArray* doIt;
 @property (strong,nonatomic) NSMutableArray* allCourseName;
 @property (strong,nonatomic) NSMutableDictionary* assignmentsForCourse;
@@ -146,65 +147,22 @@
    static NSString *CellIdentifier = @"UpdatesCell";
     static NSString *CellIdentifier2 = @"DoneItCell";
 
-//    BEVSliderCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-//    cell.allowPanningLeft = YES;
-//     cell.allowPanningRight = YES;
-//    
-//  if (cell.allowPanningLeft) {
-//      [cell addTarget:self action:@selector(cellReachedLeftEdge:) atMinimumWidthForDirection:BEVDirectionLeft];
-//   }
-// 
-//    if (cell.allowPanningRight) {
-//        [cell addTarget:self action:@selector(cellReachedRightEdge:) atMinimumWidthForDirection:BEVDirectionRight];
-//    }
-//    
-//    cell.bgColorDuringPan = [UIColor greenColor];
-//    cell.backgroundColor = [UIColor orangeColor];
-//    cell.frontLabel.text = [NSString stringWithFormat:@"%d",indexPath.row];
     
-    UITableViewCell *cell = nil;
-    if (self.currentTVCState == DoIT) {
-        cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-    }else {
-        cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier2 forIndexPath:indexPath];
-    }
-   
+    MCSwipeTableViewCell *cell =  nil;[tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
-    cell.backgroundColor = [UIColor whiteColor];
-    Assignment *currentAssignment = nil;
-    if (self.currentTVCState == DoIT) {
-        currentAssignment = [[Assignment alloc]initWithDic:[self.doIt objectAtIndex:indexPath.row]];
+    if (!cell) {
+        cell = [[MCSwipeTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
         
-        
-        
-        
-    } else {
-        NSString* course = [self.allCourseName objectAtIndex:indexPath.section];
-        NSMutableArray* assignmentForCourse = [self.assignmentsForCourse objectForKey:course];
-        currentAssignment = [assignmentForCourse objectAtIndex:indexPath.row];
-        if (currentAssignment.didSubmit) {
-            UIColor * c =[AppUtilities darkerColorForColor:[UIColor greenColor]];
-                          c = [AppUtilities darkerColorForColor:c];
-          cell.textLabel.textColor = c;
-        }else {
-            cell.textLabel.textColor = [UIColor redColor];
+        // iOS 7 separator
+        if ([cell respondsToSelector:@selector(setSeparatorInset:)]) {
+            cell.separatorInset = UIEdgeInsetsZero;
         }
         
-        
+        [cell setSelectionStyle:UITableViewCellSelectionStyleGray];
+        cell.contentView.backgroundColor = [UIColor whiteColor];
     }
     
-    
-    cell.textLabel.text = [NSString stringWithFormat:@"%@ Exercise %d",currentAssignment.course,[currentAssignment.numberOfExe intValue ]];
-    cell.textLabel.textAlignment = NSTextAlignmentCenter;
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"dd/MM"];
-    NSString* dueDateInString = [formatter stringFromDate:currentAssignment.dueDate];
-    cell.detailTextLabel.text = dueDateInString;
-    cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-   
-    
-    
-    
+    [self configureCell:cell forRowAtIndexPath:indexPath];
     
     return cell;
     
@@ -256,27 +214,53 @@
     }
     [self.tableView reloadData];
 }
-//-(void)tableView:(UITableView *)tableView
-//didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-//    
-//    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-//    
-//
-//    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionCurveEaseInOut animations:^
-//    {
-//        [cell setHighlighted:YES animated:YES];
-//    } completion:^(BOOL finished)
-//    {
-//        [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionCurveEaseInOut animations:^
-//         {
-//             [cell setHighlighted:NO animated:YES];
-//         } completion: NULL];
-//    }];
-//    
-//    [UIView animateWithDuration:2.0 animations:^{
-//        cell.textLabel.layer.backgroundColor = [UIColor greenColor].CGColor;
-//    } completion:NULL];
-//    
-//
-//}
+
+
+
+- (UIView *)viewWithImageName:(NSString *)imageName {
+    UIImage *image = [UIImage imageNamed:imageName];
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
+    imageView.contentMode = UIViewContentModeCenter;
+    return imageView;
+}
+
+
+- (void)deleteCell:(MCSwipeTableViewCell *)cell {
+    
+    NSParameterAssert(cell);
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+}
+
+-(void)assignmentComplited{
+    NSLog(@"yes");
+    
+}
+
+- (void)configureCell:(MCSwipeTableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    UIView *checkView = [self viewWithImageName:@"check"];
+    UIColor *greenColor = [UIColor colorWithRed:85.0 / 255.0 green:213.0 / 255.0 blue:80.0 / 255.0 alpha:1.0];
+    
+    UIView *crossView = [self viewWithImageName:@"cross"];
+    UIColor *redColor = [UIColor colorWithRed:232.0 / 255.0 green:61.0 / 255.0 blue:14.0 / 255.0 alpha:1.0];
+    
+    
+    // Setting the default inactive state color to the tableView background color
+    [cell setDefaultColor:self.tableView.backgroundView.backgroundColor];
+    
+    [cell setDelegate:self];
+    
+    
+        cell.shouldAnimateIcons = YES;
+        
+        [cell setSwipeGestureWithView:checkView color:greenColor mode:MCSwipeTableViewCellModeSwitch state:MCSwipeTableViewCellState1 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+            [self assignmentComplited];
+        }];
+        
+        [cell setSwipeGestureWithView:crossView color:redColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState2 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+            
+            [self deleteCell:cell];
+        }];
+ }
 @end

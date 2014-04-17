@@ -90,7 +90,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="UpdatesCell" textLabel="AkX-A4-Ney" detailTextLabel="qva-kw-SYZ" style="IBUITableViewCellStyleValue1" id="GVo-fm-igC">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="UpdatesCell" textLabel="AkX-A4-Ney" detailTextLabel="qva-kw-SYZ" style="IBUITableViewCellStyleValue1" id="GVo-fm-igC" customClass="MCSwipeTableViewCell">
                                 <rect key="frame" x="0.0" y="119" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="GVo-fm-igC" id="Bcd-Fl-ezd">

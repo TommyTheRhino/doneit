@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4688999118FFD2FA00A70D03 /* MCSwipeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4688998E18FFD2FA00A70D03 /* MCSwipeTableViewCell.m */; };
+		4688999218FFD2FA00A70D03 /* MCAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4688999018FFD2FA00A70D03 /* MCAppDelegate.m */; };
 		468C22DA18FE844700ED3695 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 468C22D918FE844700ED3695 /* Foundation.framework */; };
 		468C22DC18FE844700ED3695 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 468C22DB18FE844700ED3695 /* CoreGraphics.framework */; };
 		468C22DE18FE844700ED3695 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 468C22DD18FE844700ED3695 /* UIKit.framework */; };
@@ -53,7 +55,6 @@
 		468C241418FED34F00ED3695 /* AssignmentsTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 468C241318FED34F00ED3695 /* AssignmentsTVC.m */; };
 		468C241618FED3B300ED3695 /* icon_settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 468C241518FED3B300ED3695 /* icon_settings.png */; };
 		468C241918FED93100ED3695 /* Assignment.m in Sources */ = {isa = PBXBuildFile; fileRef = 468C241818FED93100ED3695 /* Assignment.m */; };
-		468C242218FEFE6600ED3695 /* BEVSliderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 468C242018FEFE6600ED3695 /* BEVSliderCell.m */; };
 		468C242618FF0F6E00ED3695 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 468C242518FF0F6E00ED3695 /* User.m */; };
 /* End PBXBuildFile section */
 
@@ -68,6 +69,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4688998D18FFD2FA00A70D03 /* MCSwipeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCSwipeTableViewCell.h; sourceTree = "<group>"; };
+		4688998E18FFD2FA00A70D03 /* MCSwipeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCSwipeTableViewCell.m; sourceTree = "<group>"; };
+		4688998F18FFD2FA00A70D03 /* MCAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCAppDelegate.h; sourceTree = "<group>"; };
+		4688999018FFD2FA00A70D03 /* MCAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCAppDelegate.m; sourceTree = "<group>"; };
 		468C22D618FE844700ED3695 /* DoneIT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DoneIT.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		468C22D918FE844700ED3695 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		468C22DB18FE844700ED3695 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -144,8 +149,6 @@
 		468C241518FED3B300ED3695 /* icon_settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_settings.png; sourceTree = "<group>"; };
 		468C241718FED93100ED3695 /* Assignment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Assignment.h; sourceTree = "<group>"; };
 		468C241818FED93100ED3695 /* Assignment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Assignment.m; sourceTree = "<group>"; };
-		468C241F18FEFE6600ED3695 /* BEVSliderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BEVSliderCell.h; sourceTree = "<group>"; };
-		468C242018FEFE6600ED3695 /* BEVSliderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BEVSliderCell.m; sourceTree = "<group>"; };
 		468C242418FF0F6E00ED3695 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
 		468C242518FF0F6E00ED3695 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -357,8 +360,10 @@
 		468C241C18FEFE5400ED3695 /* cell */ = {
 			isa = PBXGroup;
 			children = (
-				468C241F18FEFE6600ED3695 /* BEVSliderCell.h */,
-				468C242018FEFE6600ED3695 /* BEVSliderCell.m */,
+				4688998D18FFD2FA00A70D03 /* MCSwipeTableViewCell.h */,
+				4688998E18FFD2FA00A70D03 /* MCSwipeTableViewCell.m */,
+				4688998F18FFD2FA00A70D03 /* MCAppDelegate.h */,
+				4688999018FFD2FA00A70D03 /* MCAppDelegate.m */,
 			);
 			name = cell;
 			sourceTree = "<group>";
@@ -480,6 +485,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				468C23BC18FEC8E700ED3695 /* AFURLConnectionOperation.m in Sources */,
+				4688999118FFD2FA00A70D03 /* MCSwipeTableViewCell.m in Sources */,
 				468C22EA18FE844700ED3695 /* AppDelegate.m in Sources */,
 				468C242618FF0F6E00ED3695 /* User.m in Sources */,
 				468C231318FE85B000ED3695 /* AppUtilities.m in Sources */,
@@ -496,9 +502,9 @@
 				468C241918FED93100ED3695 /* Assignment.m in Sources */,
 				468C23B718FEC8E700ED3695 /* AFHTTPRequestOperation.m in Sources */,
 				468C240218FEC8E800ED3695 /* UIImageView+AFNetworking.m in Sources */,
+				4688999218FFD2FA00A70D03 /* MCAppDelegate.m in Sources */,
 				468C23BF18FEC8E700ED3695 /* AFURLSessionManager.m in Sources */,
 				468C240318FEC8E800ED3695 /* UIProgressView+AFNetworking.m in Sources */,
-				468C242218FEFE6600ED3695 /* BEVSliderCell.m in Sources */,
 				468C240418FEC8E800ED3695 /* UIRefreshControl+AFNetworking.m in Sources */,
 				468C231618FE875000ED3695 /* Register.m in Sources */,
 				468C23B918FEC8E700ED3695 /* AFHTTPSessionManager.m in Sources */,
